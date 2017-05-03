@@ -29,12 +29,28 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string")
      */
+    protected $civilite;
+
+    /**
+     * @ORM\Column(type="string")
+     */
     protected $firstname;
 
     /**
      * @ORM\Column(type="string")
      */
     protected $lastname;
+
+    /**
+     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="Companies")
+     */
+        protected $companies;
+
+    /**
+     * @ORM\Column(type="date")
+     */
+    protected $datesociete;
 
     /**
      * @ORM\Column(type="string")
@@ -49,15 +65,26 @@ class User implements UserInterface
 
     protected $plainPassword;
 
-    /**
-     * @ORM\Column(type="array")
-     */
-    private $role;
 
-    public function __construct()
-    {
-        $this->role = new ArrayCollection();
-    }
+    /**
+     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="Role")
+     * @ORM\JoinColumn(name="role_id", referencedColumnName="id")
+     */
+    protected $role;
+
+    /**
+     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="Risks")
+     * @ORM\JoinColumn(name="risks_id", referencedColumnName="id")
+     */
+    protected $risks_id;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    protected $phone;
+
 
 
     /**
@@ -123,7 +150,6 @@ class User implements UserInterface
     {
         $this->email = $email;
     }
-    
 
 
     /**
@@ -142,9 +168,9 @@ class User implements UserInterface
         $this->password = $password;
     }
 
-    public function getRole()
+    public function getRoles()
     {
-        return $this->role->toArray();
+        return [];
     }
 
     public function getSalt()
@@ -179,32 +205,98 @@ class User implements UserInterface
     }
 
     /**
-     * @param mixed $roles
+     * @param mixed $role
      */
-    public function setRole(array $role)
+    public function setRole($role)
     {
         $this->role = $role;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getRole()
+    {
+        return $this->role;
+    }
 
     /**
-     * Returns the roles granted to the user.
-     *
-     * <code>
-     * public function getRoles()
-     * {
-     *     return array('ROLE_USER');
-     * }
-     * </code>
-     *
-     * Alternatively, the roles might be stored on a ``roles`` property,
-     * and populated in any number of different ways when the user object
-     * is created.
-     *
-     * @return (Role|string)[] The user roles
+     * @return mixed
      */
-    public function getRoles()
+    public function getRisksId()
     {
-        // TODO: Implement getRoles() method.
+        return $this->risks_id;
+    }
+
+    /**
+     * @param mixed $risks_id
+     */
+    public function setRisksId($risks_id)
+    {
+        $this->risks_id = $risks_id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCivilite()
+    {
+        return $this->civilite;
+    }
+
+    /**
+     * @param mixed $civilite
+     */
+    public function setCivilite($civilite)
+    {
+        $this->civilite = $civilite;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+
+    /**
+     * @param mixed $phone
+     */
+    public function setPhone($phone)
+    {
+        $this->phone = $phone;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCompanies()
+    {
+        return $this->companies;
+    }
+
+    /**
+     * @param mixed $companies
+     */
+    public function setCompanies($companies)
+    {
+        $this->companies = $companies;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDatesociete()
+    {
+        return $this->datesociete;
+    }
+
+    /**
+     * @param mixed $datesociete
+     */
+    public function setDatesociete($datesociete)
+    {
+        $this->datesociete = $datesociete;
     }
 }

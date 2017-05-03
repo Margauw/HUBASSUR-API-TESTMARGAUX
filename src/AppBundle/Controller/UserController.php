@@ -19,6 +19,8 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use AppBundle\Form\UserType;
 use AppBundle\Entity\User;
+use AppBundle\Entity\Role;
+use AppBundle\Repository\RoleRepository;
 
 /**
  * Class UserController
@@ -102,31 +104,71 @@ class UserController extends Controller
      *      {"name"="firstname", "dataType"="string", "requirement"="∅", "description"="User firstname"},
      *      {"name"="lastname", "dataType"="string", "requirement"="∅", "description"="User lastname"},
      *      {"name"="email", "dataType"="string", "requirement"="∅", "description"="User email"},
-     *      {"name"="plainPassword", "dataType"="string", "requirement"="∅", "description"="User plain password"}
+     *      {"name"="plainPassword", "dataType"="string", "requirement"="∅", "description"="User plain password"},
+     *     {"name"="role", "dataType"="integer", "requirement"="∅", "description"="User role"}
      *    }
      * )
      */
     public function postRegistrationAction(Request $request)
     {
         $user = new User();
-        $form = $this->createForm(UserType::class, $user, ['validation_groups' => ['Default', 'New']]);
+        $form = $this->createForm(UserType::class, $user, ['validation_groups'=>['Default', 'New']]);
 
         $form->submit($request->request->all());
 
         if ($form->isValid()) {
+            $em = $this->get('doctrine.orm.entity_manager');
+
             $encoder = $this->get('security.password_encoder');
             // le mot de passe en claire est encodé avant la sauvegarde
             $encoded = $encoder->encodePassword($user, $user->getPlainPassword());
             $user->setPassword($encoded);
-            $user->setRole(array());
 
-            $em = $this->get('doctrine.orm.entity_manager');
+            $role = $em->getRepository('AppBundle:Role')->find($request->get('role'));
+            if ($role == NULL){
+                throw $this->createNotFoundException("Le rôle n'existe pas");
+            }
+            /*
+            else {
+                $user->setRole($role);
+            }
+            $user->setRole($role);
+            */
+            $risks_id = $em->getRepository('AppBundle:Risks')->find($request->get('risks_id'));
+            if ($risks_id == NULL){
+                throw $this->createNotFoundException("Le risk n'existe pas");
+            }
+
+            $companies = $em->getRepository('AppBundle:Companies')->find($request->get('companies'));
+            if ($companies == NULL){
+                throw $this->createNotFoundException("La société  n'existe pas");
+            }
+
             $em->persist($user);
             $em->flush();
             return $user;
         } else {
             return $form;
         }
+    }
+
+    /**
+     * @Rest\View(statusCode=Response::HTTP_CREATED, serializerGroups={"user"})
+     * @Rest\Get("/date")
+     */
+    public function getDateAction(Request $request, $datesociete)
+    {
+        $datesociete = $this->get('doctrine.orm.entity_manager')
+            ->getRepository('AppBundle:User')
+            ->findAll();
+        /* @var $datesociete User */
+
+        $datesociete->setDatesociete(new \DateTime('now'));
+
+        $formatted = [
+            'datesociete' => $datesociete->getDatesociete(),
+        ];
+        return new JsonResponse($formatted);
     }
 
     /**
@@ -233,31 +275,5 @@ class UserController extends Controller
         return \FOS\RestBundle\View\View::create(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
     }
 
-    /**
-     * @Rest\View(statusCode=Response::HTTP_CREATED, serializerGroups={"user"})
-     * @Rest\Post("/login_check")
-     */
 
-    public function loginAction(Request $request)
-    {
-        $login = $this->get('doctrine.orm.entity_manager')
-            ->getRepository('AppBundle:User')
-            ->findAll();
-
-        $form = $this->createForm(LoginType::class, $login);
-
-        $form->submit($request->request->all());
-
-        if ($form->isValid()) {
-            if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
-                return "Vous êtes connectés";
-            }
-            else{
-                return "Veuillez réessayer";
-            }
-        }
-        else {
-            return $form;
-        }
-    }
 }

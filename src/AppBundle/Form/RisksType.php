@@ -12,7 +12,9 @@ class RisksType extends AbstractType
 
         $builder->add('name');
         $builder->add('description');
-        $builder->add('amount');
+        $builder->add('size');
+        $builder->add('subscriptionpolicy_id');
+        $builder->add('companies_id');
     }
 
     public function configureOptions(OptionsResolver $resolver)

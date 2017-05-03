@@ -7,44 +7,49 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Role
  *
- * @ORM\Table(name="role")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\RoleRepository")
+ * @ORM\Table(name="roles")
+ * @ORM\Entity()
  */
 class Role
 {
     /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
-    private $id;
+    protected $id;
 
     /**
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
      */
-    private $name;
+    protected $name;
 
     /**
-     * @var array
+     * @var int
      *
-     * @ORM\Column(name="permissions", type="array")
+     * @ORM\Column(name="permissions", type="integer")
      */
-    private $permissions;
+    protected $permissions;
 
 
     /**
-     * Get id
-     *
-     * @return int
+     * @return mixed
      */
     public function getId()
     {
         return $this->id;
     }
+
+    /**
+     * @param mixed $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
 
     /**
      * Set name
@@ -87,7 +92,7 @@ class Role
     /**
      * Get permissions
      *
-     * @return array
+     * @return integer
      */
     public function getPermissions()
     {

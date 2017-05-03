@@ -6,6 +6,10 @@ users:
     type:     rest
     resource: AppBundle\Controller\UserController
 
+roles:
+    type:     rest
+    resource: AppBundle\Controller\RoleController
+
 auth-tokens:
     type:     rest
     resource: AppBundle\Controller\AuthTokenController

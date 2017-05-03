@@ -161,6 +161,14 @@ class CompaniesController extends Controller {
 
             if ($form->isValid()) {
                 $em = $this->get('doctrine.orm.entity_manager');
+                $risks_id = $em->getRepository('AppBundle:Risks')->find($request->get('risks_id'));
+                if ($risks_id == NULL){
+                    throw $this->createNotFoundException("Le risk n'existe pas");
+                }
+                $typecompanie_id = $em->getRepository('AppBundle:TypeCompanie')->find($request->get('typecompanie_id'));
+                if ($typecompanie_id == NULL){
+                    throw $this->createNotFoundException("Le type n'existe pas");
+                }
                 $em->persist($company);
                 $em->flush();
                 return $company;

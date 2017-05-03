@@ -33,28 +33,27 @@ class Risks
     /**
      * @ORM\Column(type="integer")
      */
-    protected $amount;
+    protected $size;
 
     /**
-     * @ORM\ManyToMany(targetEntity="SubscriptionPolicy")
-     * @ORM\JoinTable(name="risks_subscriptionpolicies",
-     *      joinColumns={@ORM\JoinColumn(name="subscriptionpolicies_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="subscriptionpolicies_id", referencedColumnName="id", unique=true)}
-     *      )
+     * @ORM\Column(type="integer")
+     * @ORM\OneToOne(targetEntity="SubscriptionPolicy")
+     * @ORM\JoinColumn(name="subscriptionpolicy_id", referencedColumnName="id")
      */
-    protected $subscriptionpolicies;
+    protected $subscriptionpolicy_id;
 
-    public function __construct()
-    {
-        $this->companies = new ArrayCollection();
-        $this->subscriptionpolicies = new ArrayCollection();
-    }
+//    public function __construct()
+//    {
+//        $this->companies_id = new ArrayCollection();
+//        $this->subscriptionpolicies = new ArrayCollection();
+//    }
 
     /**
-     * @ORM\ManyToMany(targetEntity="Companies", inversedBy="risks")
-     * @ORM\JoinTable(name="companies_risks")
+     * @ORM\Column(type="integer")
+     * @ORM\ManyToMany(targetEntity="Companies")
+     * @ORM\JoinColumn(name="companies_id", referencedColumnName="id")
      */
-    protected $companies;
+    protected $companies_id;
 
 
     public function getId()
@@ -101,25 +100,54 @@ class Risks
         $this->description= $description;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getAmount()
-    {
-        return $this->amount;
-    }
-
-    /**
-     * @param mixed $amount
-     */
-    public function setAmount($amount)
-    {
-        $this->amount = $amount;
-    }
 
     /**
      * @return mixed
      */
+    public function getCompaniesId()
+    {
+        return $this->companies_id;
+    }
+
+    /**
+     * @param mixed $companies_id
+     */
+    public function setCompaniesId($companies_id)
+    {
+        $this->companies_id = $companies_id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSubscriptionpolicyId()
+    {
+        return $this->subscriptionpolicy_id;
+    }
+
+    /**
+     * @param mixed $subscriptionpolicy_id
+     */
+    public function setSubscriptionpolicyId($subscriptionpolicy_id)
+    {
+        $this->subscriptionpolicy_id = $subscriptionpolicy_id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSize()
+    {
+        return $this->size;
+    }
+
+    /**
+     * @param mixed $size
+     */
+    public function setSize($size)
+    {
+        $this->size = $size;
+    }
 
 
 }

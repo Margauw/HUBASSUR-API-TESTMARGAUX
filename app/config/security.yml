@@ -15,7 +15,7 @@ security:
         login:
             entity:
               class:    AppBundle\Entity\User
-              property: email
+              property: email, password
 
     firewalls:
         # disables authentication for assets and the profiler, adapt it according to your needs
@@ -42,12 +42,19 @@ security:
             provider: auth_token_user_provider
             anonymous: ~
 
-
         login:
-             pattern:    ^/
-             http_basic: ~
-             provider: login
-             form_login:
-                      login_path: login
-                      check_path: login
+            pattern:   ^/
+            anonymous: true
+            provider:  login
+            form_login:
+                login_path: login
+                check_path: login_check
+            logout:
+                path:   logout
+                target: /livres
 
+
+    encoders:
+        AppBundle\Entity\User:
+            algorithm: bcrypt
+            cost: 12

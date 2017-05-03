@@ -43,7 +43,7 @@ class RisksController extends Controller {
                     'id' => $risk->getId(),
                     'name' => $risk->getName(),
                     'description' => $risk->getDescription(),
-                    'amount' => $risk->getAmount(),
+                    'size' => $risk->getSize(),
 
                 ];
             }
@@ -93,7 +93,7 @@ class RisksController extends Controller {
          *       {"name"="id", "dataType"="integer", "requirement"="∅", "description"="Risks id"},
          *       {"name"="name", "dataType"="string", "requirement"="∅", "description"="Risks name"},
          *       {"name"="description", "dataType"="string", "requirement"="∅", "description"="Risks description"},
-         *      {"name"="amount", "dataType"="integer", "requirement"="∅", "description"="Risks amount"},
+         *      {"name"="size", "dataType"="integer", "requirement"="∅", "description"="Risks size"},
          *     }
          * )
          */
@@ -134,7 +134,7 @@ class RisksController extends Controller {
          *    requirements= {
          *       {"name"="name", "dataType"="string", "requirement"="∅", "description"="Risks name"},
          *       {"name"="description", "dataType"="string", "requirement"="∅", "description"="Risks description"},
-         *       {"name"="amount", "dataType"="integer", "requirement"="∅", "description"="Risks amount"}
+         *       {"name"="size", "dataType"="integer", "requirement"="∅", "description"="Risks size"}
          *     }
          * )
          */
@@ -147,6 +147,14 @@ class RisksController extends Controller {
 
             if ($form->isValid()) {
                 $em = $this->get('doctrine.orm.entity_manager');
+                $companies_id = $em->getRepository('AppBundle:SubscriptionPolicy')->find($request->get('companies_id'));
+                if ($companies_id == NULL){
+                    throw $this->createNotFoundException("La compagnie n'existe pas");
+                }
+                $subscriptionpolicy_id = $em->getRepository('AppBundle:SubscriptionPolicy')->find($request->get('subscriptionpolicy_id'));
+                if ($subscriptionpolicy_id == NULL){
+                    throw $this->createNotFoundException("La sub n'existe pas");
+                }
                 $em->persist($risk);
                 $em->flush();
                 return $risk;

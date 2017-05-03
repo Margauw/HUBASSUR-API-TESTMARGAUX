@@ -15,7 +15,12 @@ class CompaniesType extends AbstractType
         $builder->add('city');
         $builder->add('country');
         $builder->add('postcode');
+        $builder->add('website');
         $builder->add('telephone');
+        $builder->add('fax');
+        $builder->add('video');
+        $builder->add('risks_id');
+        $builder->add('typecompanie_id');
     }
 
     public function configureOptions(OptionsResolver $resolver)

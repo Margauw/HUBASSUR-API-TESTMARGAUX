@@ -1,5 +1,6 @@
 <?php
 namespace AppBundle\Form;
+
 /**
  * Created by PhpStorm.
  * User: gauthierflichy
@@ -7,31 +8,23 @@ namespace AppBundle\Form;
  * Time: 18:41
  */
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 
-class UserType extends AbstractType
+class RoleType extends AbstractType
 {
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('civilite');
-        $builder->add('firstname');
-        $builder->add('lastname');
-        $builder->add('plainPassword');
-        $builder->add('email', EmailType::class);
-        $builder->add('role');
-        $builder->add('risks_id');
-        $builder->add('companies');
-        $builder->add('datesociete');
-        $builder->add('phone');
+        $builder->add('name');
+        $builder->add('permissions');
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => 'AppBundle\Entity\User',
+            'data_class' => 'AppBundle\Entity\Role',
             'csrf_protection' => false
         ]);
     }
